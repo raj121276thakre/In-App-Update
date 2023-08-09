@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import com.google.android.play.core.appupdate.AppUpdateManager
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.InstallStateUpdatedListener
@@ -16,6 +17,7 @@ import kotlinx.coroutines.delay
 import kotlin.time.Duration.Companion.seconds
 
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity() {
@@ -30,14 +32,14 @@ class MainActivity : AppCompatActivity() {
         //in app update
         appUpdateManager = AppUpdateManagerFactory.create(applicationContext)
 
-        if (updateType == AppUpdateType.FLEXIBLE){
+        if (updateType == AppUpdateType.FLEXIBLE) {
             appUpdateManager.registerListener(installStateUpdatedListener)
         }
 
         checkForAppUpdates()
 
 
-    }
+    }//.............................................................................
 
     //in app update
     private val installStateUpdatedListener = InstallStateUpdatedListener { state ->
@@ -47,9 +49,10 @@ class MainActivity : AppCompatActivity() {
                 "Download successful, Restarting app in 5 seconds",
                 Toast.LENGTH_LONG
             ).show()
-
+            lifecycleScope.launch {
+                delay(5.seconds)
                 appUpdateManager.completeUpdate()
-
+            }
         }
 
 
@@ -112,7 +115,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        if (updateType == AppUpdateType.FLEXIBLE){
+        if (updateType == AppUpdateType.FLEXIBLE) {
             appUpdateManager.unregisterListener(installStateUpdatedListener)
         }
     }

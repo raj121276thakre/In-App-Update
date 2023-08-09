@@ -49,4 +49,5 @@ dependencies {
     // dependency for  Playstore In-App Update:
     implementation("com.google.android.play:app-update:2.1.0")
     implementation("com.google.android.play:app-update-ktx:2.1.0")
+    implementation("androidx.lifecycle:lifecycle-process:2.6.1")
 }
